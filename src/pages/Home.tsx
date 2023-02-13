@@ -19,7 +19,6 @@ export const Home: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
   const { searchValue } = useSelector((state: { filter: { searchValue: string } }) => state.filter);
 
@@ -34,6 +33,7 @@ export const Home: React.FC = () => {
 
   const getPies = async () => {
     let filter = '';
+
     switch (Number(activeSortItem)) {
       case 0:
         filter = 'sortBy=price';
@@ -51,10 +51,7 @@ export const Home: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (!isSearch.current) {
-      getPies();
-    }
-    isSearch.current = false;
+    getPies();
   }, [activeCategory, activeSortItem, searchValue, currentPage]);
 
   interface FilterType {
@@ -69,7 +66,6 @@ export const Home: React.FC = () => {
       const params = qs.parse(window.location.search.substring(1)) as unknown as FilterType; //так как нельзя передавать первым ?
       dispatch(setFilters(params));
     }
-    isSearch.current = true;
   }, []);
 
   React.useEffect(() => {
@@ -82,6 +78,7 @@ export const Home: React.FC = () => {
       });
       navigate(`?${quetyString}`);
     }
+
     isMounted.current = true; //Изначально адресная строка чистая, без параметров
   }, [activeCategory, activeSortItem, currentPage]);
 
